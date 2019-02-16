@@ -1,0 +1,19 @@
+{
+  "name": "linkreducer",
+  "version": "1.0.0",
+  "description": "a website for generating reduced links",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "link",
+    "reducer",
+    "arman",
+    "feili",
+    "link",
+    "url"
+  ],
+  "author": "arman feili",
+  "license": "ISC"
+}
