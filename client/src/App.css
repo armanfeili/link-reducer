@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  font-family: "Open Sans", sans-serif;
 }
 
 .App-logo {
@@ -7,8 +8,10 @@
   height: 40vmin;
   pointer-events: none;
 }
-
+/* font-family: 'Pinyon Script', cursive;
+font-family: 'Open Sans', sans-serif; */
 .App-header {
+  font-family: "Pinyon Script", cursive;
   background-color: #282c34;
   min-height: 100vh;
   display: flex;

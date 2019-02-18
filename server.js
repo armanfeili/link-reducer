@@ -6,10 +6,12 @@ const path = require('path'); // this is a built-in module
 
 const app = express();
 
-// const users = require('./routes/api/users')
-// const profile = require('./routes/api/profile')
-// const posts = require('./routes/api/posts')
-
+// // const users = require('./routes/api/users')
+// // const profile = require('./routes/api/profile')
+// // const posts = require('./routes/api/posts')
+const users = require('./routes/api/users');
+const links = require('./routes/api/links');
+const profiles = require('./routes/api/profiles');
 // DB config
 const db = require('./config/keys').mongoURI;
 
@@ -22,10 +24,13 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded -> parse the code from url
 app.use(bodyParser.json()); // parse application/json -> parse the code from json code
 
-// // User routes
-// app.use('/api/users', users)
-// app.use('/api/profile', profile)
-// app.use('/api/posts', posts)
+// // // User routes
+// // app.use('/api/users', users)
+// // app.use('/api/profile', profile)
+// // app.use('/api/posts', posts)
+app.use('/api/users', users);
+app.use('/api/links', links);
+app.use('/api/profiles', profiles);
 
 // Server static assets if in production
 if (process.env.NODE_ENV === 'production') {
@@ -41,10 +46,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // passport middleware
-// app.use(passport.initialize())
+app.use(passport.initialize());
 
 // passport config - pass the passport to the passport.js file
-// require('./config/passport')(passport)
+require('./config/passport')(passport);
 
 app.listen(port, () => {
   console.log(`server running on port ${port}`);

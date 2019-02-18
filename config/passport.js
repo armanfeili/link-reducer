@@ -16,7 +16,7 @@ module.exports = passport => { // in server.js we passed passport right here
   // we pass in our strategy with options and what we get back in callback is our payload(that include user data) and done.
   passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
     // jwt_payload should include user stuff, so we should have a route (/current) and send user info to passprt.js as jwt_payload
-    console.log(jwt_payload); // returns user payload
+    // console.log(jwt_payload) // returns user payload
     user.findById(jwt_payload.id) // here we find user so we can have the permission to access this user data.
       .then((user) => {
         if (user) {
