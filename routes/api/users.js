@@ -2,12 +2,16 @@ const express = require('express');
 const router = express.Router();
 const User = require('../../models/User');
 const Link = require('../../models/Link');
-let Profile = require('../../models/Profile');
+// let Profile = require('../../models/Profile')
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
 const passport = require('passport');
+
+// Load Input Validation
+const validateRegisterInput = require('../../validation/register');
+const validateLoginInput = require('../../validation/login');
 
 // @route   GET api/users/test
 // @desc    Tests users route
@@ -20,7 +24,14 @@ router.get('/test', (req, res) => {
 // $desc    Register User
 // @access  Public
 router.post('/register', (req, res) => {
-  const errors = {};
+  const { errors, isValid } = validateRegisterInput(req.body); // req.body contains name,email,password . so with ES6 technic of destruction,
+  // we sent the coming return-value from validateRegisterInput() to variables of 'errors' and 'isValid' 
+
+  // check validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   let avatar;
   User.findOne({email: req.body.email}).then(user => {
     if (user) {
@@ -86,6 +97,19 @@ router.post('/register', (req, res) => {
 // // @router  POST api/users/createprofile
 // // $desc    Register User
 // // @access  Public
+router.delete('/deleteuser', passport.authenticate('jwt', { session: false }), (req, res) => {
+  if (req.user.id) {
+    User.findOneAndRemove({ _id: req.user.id }) // this will delete user
+      .then(() => res.json({ success: true })); // with posting this DELETE request, we will delete both profile and user at the same time.
+  // if we want to, we can specify diffrent button with diffrent event to delete them separately
+  } else {
+    res.status(404).json({ message: 'user not found' });
+  }
+});
+
+// // @router  POST api/users/createprofile
+// // $desc    Register User
+// // @access  Public
 // router.post('/createprofile', (req, res) => {
 //   const errors = {}
 //   Profile.find().then(profile => {
@@ -116,7 +140,13 @@ router.post('/register', (req, res) => {
 // $desc    Login User
 // @access  Public
 router.post('/login', (req, res) => {
-  const errors = {};
+  const { errors, isValid } = validateLoginInput(req.body); // req.body contains name,email,password . so with ES6 technic of destruction,
+  // we sent the coming return-value from validateLoginInput() to variables of 'errors' and 'isValid' 
+  // check validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   const email = req.body.email;
   const password = req.body.password;
 
@@ -162,7 +192,7 @@ router.post('/editprofile', passport.authenticate('jwt', { session: false }), (r
       // }
 
       // *** Using map() ***//
-      links.map((link, index) => {
+      links.map(link => {
         // console.log(typeof link)
         link.name = name;
         link.save();

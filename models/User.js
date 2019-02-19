@@ -22,6 +22,9 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  photo: {
+    type: Object // ???????????????
+  },
   links: {
     type: Number,
     default: 0

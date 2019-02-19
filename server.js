@@ -11,7 +11,8 @@ const app = express();
 // // const posts = require('./routes/api/posts')
 const users = require('./routes/api/users');
 const links = require('./routes/api/links');
-const profiles = require('./routes/api/profiles');
+// const profiles = require('./routes/api/profiles')
+// const comments = require('./routes/api/comments')
 // DB config
 const db = require('./config/keys').mongoURI;
 
@@ -30,7 +31,8 @@ app.use(bodyParser.json()); // parse application/json -> parse the code from jso
 // // app.use('/api/posts', posts)
 app.use('/api/users', users);
 app.use('/api/links', links);
-app.use('/api/profiles', profiles);
+// app.use('/api/profiles', profiles)
+// app.use('/api/comments', comments)
 
 // Server static assets if in production
 if (process.env.NODE_ENV === 'production') {

@@ -24,7 +24,7 @@ const LinksSchema = new Schema({
     ref: 'users'
   },
   photo: {
-    type: String, // ????????? or maybe Object?!
+    type: Object, // ????????? or maybe Object?!
   },
   shared: {
     type: Boolean,
@@ -51,9 +51,21 @@ const LinksSchema = new Schema({
       name: {
         type: String
       },
+      avatar: {
+        type: Schema.Types.String,
+        ref: 'users'
+      },
       photo: {
         type: String // ???????????????
       },
+      likes: [
+        {
+          user: { // once they like,their user id (ObjectId) will go into this array
+            type: Schema.Types.ObjectId,
+            ref: 'users'
+          }
+        }
+      ],
       date: {
         type: Date,
         default: Date.now
