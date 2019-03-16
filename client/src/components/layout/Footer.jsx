@@ -1,13 +1,10 @@
-import React, { Component } from "react";
+import React from "react";
+import linkReducer from "../../reducers/linkReducer";
 
-class Navbar extends Component {
-  render() {
-    return (
-      <div>
-        <h1>Hello NavBar!</h1>
-      </div>
-    );
-  }
-}
-
-export default Navbar;
+export default () => {
+  return (
+    <footer className="text-center">
+      Copyright &copy; {new Date().getFullYear()} LinkReducer
+    </footer>
+  );
+};

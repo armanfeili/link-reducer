@@ -1,7 +1,7 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from '../utils/setAuthToken';
-import { GET_ERRORS, SET_CURRENT_USER } from './types';
+import { CLEAR_CURRENT_PROFILE, GET_ERRORS, SET_CURRENT_USER, PROFILE_LOADING, GET_PROFILE, GET_PROFILES } from './types';
 
 // Register user
 export const registerUser = (userData, history) => dispatch => {
@@ -51,3 +51,63 @@ export const setCurrentUser = decoded => { // this will get the decoded token an
     payload: decoded
   };
 };
+
+// ********************************************************************************//
+
+export const getCurrentProfile = () => dispatch => {
+  dispatch(setProfileLoading());
+  axios.get('/api/users/current')
+    .then(res => dispatch({
+      type: GET_PROFILE,
+      payload: res.data
+    }))
+    .catch(err => dispatch({
+      type: GET_ERRORS,
+      payload: {}
+    }));
+};
+
+export const getProfiles = () => dispatch => {
+  dispatch(setProfileLoading());
+  axios.get('/api/users/profiles')
+    .then(res => dispatch({
+      type: GET_PROFILES,
+      payload: res.data
+    }))
+    .catch(err => dispatch({
+      type: GET_ERRORS,
+      payload: {}
+    }));
+};
+
+export const deleteAccount = (history) => dispatch => {
+  axios.delete('/api/users/deleteuser')
+    .then(res => {
+      dispatch({
+        type: SET_CURRENT_USER, // it will go to authReducer and set the user as empty object and isAuthenticated will set to false.
+        payload: {}
+      });
+      history.push('/login');
+    })
+    .catch(err => dispatch({
+      type: GET_ERRORS,
+      payload: {}
+    }));
+};
+
+// Profile Loading
+export const setProfileLoading = () => {
+  // We don't need to send any payload or anything, it's just going to let the reducer know that it's loading.
+  return {
+    type: PROFILE_LOADING
+  };
+};
+
+
+// Clear profile
+export const clearCurrentProfile = () => {
+    // We don't need to send any payload or anything, it's just going to let the reducer know that there is no profile.
+    return {
+        type: CLEAR_CURRENT_PROFILE
+    };
+}

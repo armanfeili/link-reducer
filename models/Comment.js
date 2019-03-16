@@ -24,7 +24,7 @@ const CommentsSchema = new Schema({
     ref: 'users'
   },
   photo: {
-    type: Object, // ????????? or maybe Object?!
+    type: String, // ????????? or maybe Object?!
   },
   likes: [
     {

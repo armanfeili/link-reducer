@@ -12,8 +12,18 @@ export const PROFILE_NOT_FOUND = 'PROFILE_NOT_FOUND';
 export const CLEAR_CURRENT_PROFILE = 'CLEAR_CURRENT_PROFILE';
 export const GET_PROFILES = 'GET_PROFILES';
 
-export const POST_LOADING = 'POST_LOADING';
-export const GET_POSTS = 'GET_POSTS';
-export const GET_POST = 'GET_POST';
-export const ADD_POST = 'ADD_POST';
-export const DELETE_POST = 'DELETE_POST';
+export const LINK_LOADING = 'LINK_LOADING';
+export const GET_LINKS = 'GET_LINKS';
+export const GET_LINK = 'GET_LINK';
+export const ADD_LINK = 'ADD_LINK';
+export const DELETE_LINK = 'DELETE_LINK';
+
+export const CONVERT_LINK = 'CONVERT_LINK';
+export const GET_CONVERT_LINK = 'GET_CONVERT_LINK';
+export const REDIRECT_LINK = 'REDIRECT_LINK';
+
+// export const COMMENT_LOADING = 'COMMENT_LOADING'
+// export const GET_COMMENTS = 'GET_COMMENTS'
+// export const GET_COMMENT = 'GET_COMMENT'
+// export const ADD_COMMENT = 'ADD_COMMENT'
+// export const DELETE_COMMENT = 'DELETE_COMMENT'

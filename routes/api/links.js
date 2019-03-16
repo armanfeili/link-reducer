@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../../models/User');
 const Link = require('../../models/Link');
+const MainLink = require('../../models/MainLink');
 const Comment = require('../../models/Comment');
 // const bcrypt = require('bcryptjs')
 // const jwt = require('jsonwebtoken')
@@ -10,6 +11,24 @@ const passport = require('passport');
 
 const validateCommentInput = require('../../validation/comment');
 
+const addhttp = url => {
+  if (!/^(?:f|ht)tps?\:\/\//.test(url)) {
+    url = 'http://' + url;
+  }
+  return url;
+};
+
+const stringGenerator = max => {
+  var text = '';
+  var possible =
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  for (var i = 0; i < max; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
+};
+
 // @route   GET api/users/test
 // @desc    Tests users route
 // @access  Public
@@ -17,18 +36,104 @@ router.get('/test', (req, res) => {
   res.json({ msg: 'Users works' });
 });
 
-// @route   GET api/users/
-// @desc    Reduce a link
+// @route   POST api/links/converter
+// @desc    Reduce a link and save it, so always anyone can click it and redirect to the real url link.
 // @access  Public
-router.post('/', (req, res) => {
-  const link = req.body.link;
+router.post('/converter', (req, res) => {
+  const errors = {};
+  const linkImported = req.body.linkImported;
+  // console.log(req.body.linkImported)
+
+  // reduce the link
+  MainLink.findOne({ realUrl: linkImported}).then(link => {
+    if (link) {
+      // errors.newlink = 'this link is already exist in our database'
+      // return res.status(400).json(errors)
+      console.log('this link is already exist in our database and converted before.');
+      res.json({
+        message: 'this link is already exist in our database and converted before.',
+        convertedUrl: link.convertedUrl,
+        realUrl: link.realUrl
+      });
+      return link.convertedUrl;
+    }else {
+      console.log('this link is totally new');
+      const newString = stringGenerator(5);
+      // const newUrl = addhttp(newString)
+      // create a random string
+      // 
+      let newUrl;
+      if (process.env.NODE_ENV === 'production') {
+        newUrl = `http://localhost:5000/api/links/redirect/${newString}`;
+      }else {
+        // newUrl = `https://linkreducer.herokuapp.com/${newString}`
+        newUrl = `http://localhost:5000/api/links/redirect/${newString}`;
+      }
+      const newLink = new MainLink({
+        realUrl: linkImported,
+        linkCode: newString,
+        convertedUrl: newUrl
+      });
+
+      newLink.save().then(link => {
+        res.json(link);
+        return link; // we return whole link, so we can store it into application state,
+      // then we can find it and pass "link.linkcode" to redirect route.
+      }).catch(err => res.json(err));
+    }
+  });
+});
+
+// @route   GET api/links/converter
+// @desc    we get the reducerd (converted) Link
+// @access  Public
+router.get('/converter', (req, res) => {
+  const errors = {};
+  console.log('$$$' + req.body.linkImported);
+
+  MainLink.findOne({ realUrl: req.body.linkImported}).then(link => {
+    if (link) {
+      res.json(link);
+      return link.convertedUrl;
+    }else {
+      errors.link = 'this link is not exist in our database';
+      return res.status(404).json(errors);
+    }
+  });
 // reduce the link
 });
 
-// @route   POST api/links/dashboard
+// @route   POST api/links/redirect
+// @desc    redirect the link to it's real url
+// @access  Public
+router.get('/redirect/:linkcode', (req, res) => {
+  const errors = {};
+  MainLink.findOne({ linkCode: req.params.linkcode }).then(link => {
+    if (link) {
+      // res.json(link)
+      // return window.location.replace(link.realUrl)
+      return res.redirect(link.realUrl);
+    } else {
+      errors.link = 'this link is not exist in our database';
+      return res.status(404).json(errors);
+    }
+  });
+// reduce the link
+});
+
+// @route   GET api/users/converter
+// @desc    Reduce a link and save it, so always anyone can click it and redirect to the real url link.
+// @access  Public
+router.post('/', (req, res) => {
+  const link = req.body.link;
+  // reduce the link
+
+});
+
+// @route   POST api/links/savelink
 // @desc    Save a link
 // @access  Private
-router.post('/dashboard', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.post('/savelink', passport.authenticate('jwt', { session: false }), (req, res) => {
   const errors = {};
   const linkComming = req.body.linkComming; // the link we want to save
   // reduce the link
@@ -60,29 +165,28 @@ router.post('/dashboard', passport.authenticate('jwt', { session: false }), (req
   });
 });
 
-// @route   DELETE api/links/dashboard
-// @desc    delete a link
+// @route   GET api/links/getlink/link
+// @desc    Get a link
 // @access  Private
-router.delete('/dashboard/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/getlink/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
   const errors = {};
   User.findOne({ _id: req.user._id }).then(user => {
     Link.findById(req.params.id).then(link => { // check if the link is already exists
-      // Check for post owner
-      if (link.user.toString() !== req.user.id) { // post.user is an id and not string, so we used toString()
-        // user is << user: req.user.id >> 
-        return res.status(404).json({ notauthorized: 'User not authorized' });
+      // Link.findOne({ textlink: linkComming}).then(link => { // check if the link is already exists
+      if (!link) {
+        errors.notFound = 'Link not found';
+        return res.status(404).json(errors);
+      } else {
+        res.json(link);
       }
-
-      // Delete
-      link.delete().then(() => res.json({ success: true }));
-    });
+    }).catch(err => res.status(404).json({ nopostfound: 'No link found by that id' }));
   });
 });
 
-// @route   GET api/links/dashboard
+// @route   GET api/links/getlinks
 // @desc    show user's links
 // @access  Private
-router.get('/dashboard', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/getlinks', passport.authenticate('jwt', { session: false }), (req, res) => {
   const errors = {};
   User.findOne({ _id: req.user._id}).then(user => {
     console.log(user);
@@ -99,6 +203,25 @@ router.get('/dashboard', passport.authenticate('jwt', { session: false }), (req,
         res.json(links);
       }).catch((err) => {
       res.status(400).json({links: "can't get the links"});
+    });
+  });
+});
+
+// @route   DELETE api/links/deletelink
+// @desc    delete a link
+// @access  Private
+router.delete('/deletelink/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const errors = {};
+  User.findOne({ _id: req.user._id }).then(user => {
+    Link.findById(req.params.id).then(link => { // check if the link is already exists
+      // Check for post owner
+      if (link.user.toString() !== req.user.id) { // post.user is an id and not string, so we used toString()
+        // user is << user: req.user.id >> 
+        return res.status(404).json({ notauthorized: 'User not authorized' });
+      }
+
+      // Delete
+      link.delete().then(() => res.json({ success: true }));
     });
   });
 });
