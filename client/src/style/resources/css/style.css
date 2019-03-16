@@ -292,6 +292,7 @@ button[type="button"] {
 }
 
 .copy-button {
+  margin-top: -70px;
   width: 10%;
   float: right;
   margin-left: 0px;
@@ -362,7 +363,7 @@ button[type="button"] {
 .auth-button {
   float: left;
   width: 100%;
-  margin-top: 40px;
+  margin-top: 15px;
   color: #fff;
   font-size: 110%;
   border: 0px solid transparent;
@@ -377,6 +378,23 @@ button[type="button"] {
 }
 /********************************
         Background-colors
+********************************/
+.is-invalid {
+  /* border: 2px solid rgb(180, 0, 0); */
+  background-color: rgb(255, 198, 198);
+}
+
+.input-group {
+  height: 110px;
+}
+
+.invalid-feedback {
+  float: left;
+  color: #dfdfdf;
+}
+
+/********************************
+           Forms  
 ********************************/
 
 /********************************
@@ -420,7 +438,7 @@ textarea {
 }
 
 .link-space {
-  margin-top: 2%;
+  /* margin-top: 2%; */
 }
 
 .email-field {

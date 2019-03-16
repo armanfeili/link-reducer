@@ -1,20 +1,59 @@
 import React, { Component } from 'react';
+import { loginUser } from '../../actions/authActions';
 
 import InputGroup from '../common/InputGroup';
-class Navbar extends Component {
-  constructor (props) {
-    super(props);
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+
+class Login extends Component {
+  constructor () {
+    super();
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      errors: {}
     };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
+  componentDidMount () {
+    // if the user already logedin, we want to redirect the page to dashboard
+    console.log(this.props.auth.isAuthenticated);
+
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push('/dashboard');
+    }
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.auth.isAuthenticated) {
+      this.props.history.push('/dashboard');
+    }
+
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
+
+  // componentDidUpdate(prevProps) {
+  //   if (prevProps) {
+  //   }
+
+  //   if (prevProps.errors !== this.props.errors) {
+  //     this.setState({ errors: this.props.errors })
+  //   }
+  // }
+
   onSubmit (e) {
     e.preventDefault();
+    const userData = {
+      email: this.state.email,
+      password: this.state.password
+    };
+    this.props.loginUser(userData);
   }
 
   onChange (e) {
@@ -28,7 +67,7 @@ class Navbar extends Component {
       <div>
         <section>
           <h1>Login</h1>
-          <form action='' className='row auth-form'>
+          <form action='' onSubmit={this.onSubmit} className='row auth-form'>
             <p className='link-description link-space'>
               Please enter your email.
             </p>
@@ -39,7 +78,7 @@ class Navbar extends Component {
               name='email'
               value={this.state.email}
               onChange={this.onChange}
-              errors={errors}></InputGroup>
+              error={errors.email}></InputGroup>
             <p className='link-description link-space'>
               Please enter your password.
             </p>
@@ -50,7 +89,7 @@ class Navbar extends Component {
               name='password'
               value={this.state.password}
               onChange={this.onChange}
-              errors={errors}></InputGroup>
+              error={errors.password}></InputGroup>
             <button className='auth-button'>
               login
             </button>
@@ -61,4 +100,15 @@ class Navbar extends Component {
   }
 }
 
-export default Navbar;
+Login.propTypes = {
+  loginUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+export default connect(mapStateToProps, {loginUser})(withRouter(Login));

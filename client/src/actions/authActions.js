@@ -3,14 +3,32 @@ import jwt_decode from 'jwt-decode';
 import setAuthToken from '../utils/setAuthToken';
 import { CLEAR_CURRENT_PROFILE, GET_ERRORS, SET_CURRENT_USER, PROFILE_LOADING, GET_PROFILE, GET_PROFILES } from './types';
 
+// // Register user
+// export const registerUser = (userData, history) => dispatch => {
+//   console.log(userData)
+
+//   axios.post('/api/users/register', userData) // we send a request to server with data
+//     .then(res => history.push('/login')) // if request has been sent, we redirect the page to '/login'
+//     .catch(err => dispatch({ // if there was any error for sending request, we dispatch GET_ERRORS to the reducers
+//       type: GET_ERRORS,
+//       payload: err.response.data
+//     }))
+// }
+
 // Register user
 export const registerUser = (userData, history) => dispatch => {
-  axios.post('/api/users/register', userData) // we send a request to server with data
-    .then(res => history.push('/login')) // if request has been sent, we redirect the page to '/login'
-    .catch(err => dispatch({ // if there was any error for sending request, we dispatch GET_ERRORS to the reducers
+  //     return { // we're sending this action to all reducers. userdata here is actualy the data coming from axios or http request
+  //     type: TEST_DISPATCH,
+  //     payload: userdata
+  //   }
+  axios
+    .post('/api/users/register', userData)
+    .then(res => history.push('/login')) // if axios.post worked successfully we ridirect /register route to /login
+    .catch(err => dispatch({ // calling dispatch , help us to send an action
       type: GET_ERRORS,
       payload: err.response.data
-    }));
+    })
+  );
 };
 
 // Login user - Get user token
@@ -103,11 +121,10 @@ export const setProfileLoading = () => {
   };
 };
 
-
 // Clear profile
 export const clearCurrentProfile = () => {
-    // We don't need to send any payload or anything, it's just going to let the reducer know that there is no profile.
-    return {
-        type: CLEAR_CURRENT_PROFILE
-    };
-}
+  // We don't need to send any payload or anything, it's just going to let the reducer know that there is no profile.
+  return {
+    type: CLEAR_CURRENT_PROFILE
+  };
+};

@@ -29,6 +29,8 @@ import Login from './components/auth/login';
 import Register from './components/auth/register';
 import NotFound from './components/not-found/NotFound';
 
+import Dashboard from './components/dashboard/Dashboard';
+
 // Check for token - if we go to browser>inspect>Application>Local Storage , we can see our token 
 if (localStorage.jwtToken) {
   // Set auth token header as Authorization
@@ -73,10 +75,10 @@ class App extends Component {
                 <Route exact path='/login' component={Login} />
                 {/* <Route exact path='/profiles' component={Profiles} /> */}
                 {/* <Route exact path='/profile/:handle' component={Profile} /> */}
-                {/* <Switch> */}
-                {/* for every private route we just need to wrap it in <switch>, and it prevent from strange redirect issues*/}
-                {/* <PrivateRoute exact path='/dashboard' component={Dashboard} /> */}
-                {/* </Switch> */}
+                <Switch>
+                  {/* for every private route we just need to wrap it in <switch>, and it prevent from strange redirect issues */}
+                  <PrivateRoute exact path='/dashboard' component={Dashboard} />
+                </Switch>
                 <Route exact path='/not-found' component={NotFound} />
               </div>
             </div>
