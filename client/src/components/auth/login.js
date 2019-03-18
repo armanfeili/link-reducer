@@ -67,7 +67,7 @@ class Login extends Component {
       <div>
         <section>
           <h1>Login</h1>
-          <form action='' onSubmit={this.onSubmit} className='row auth-form'>
+          <form onSubmit={this.onSubmit} className='row auth-form'>
             <p className='link-description link-space'>
               Please enter your email.
             </p>

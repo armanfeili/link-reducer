@@ -74,6 +74,25 @@ class Landing extends Component {
   //   });
   // }
 
+  componentDidMount() {
+    // if the user already logedin, we want to redirect the page to dashboard
+    console.log(this.props.auth.isAuthenticated);
+
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push("/dashboard");
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.auth.isAuthenticated) {
+      this.props.history.push("/dashboard");
+    }
+
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
+
   componentDidUpdate(prevProps) {
     // if (prevProps.linkComming !== this.props.linkComming) {
     //   this.setState({
@@ -88,7 +107,7 @@ class Landing extends Component {
   } // this always rerun component,till the 'then()' part of the action happens
 
   render() {
-    const { errors } = this.state;
+    const { errors } = this.props;
 
     return (
       <div>
@@ -103,7 +122,7 @@ class Landing extends Component {
               name="pastelink"
               value={this.state.pastelink}
               onChange={this.onChange}
-              errors={errors}
+              error={errors.linkImported}
             />
             <button onSubmit={this.onSubmit} className="copy-button">
               <FaExchangeAlt />
@@ -154,10 +173,13 @@ class Landing extends Component {
 }
 
 Landing.propTypes = {
-  convertLink: PropTypes.func.isRequired
+  convertLink: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
+  auth: state.auth,
   errors: state.errors,
   mainLink: state.mainLink
 });

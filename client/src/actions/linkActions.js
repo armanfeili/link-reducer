@@ -2,17 +2,20 @@ import axios from 'axios';
 
 import { LINK_LOADING, GET_LINK, GET_LINKS, ADD_LINK, DELETE_LINK, GET_ERRORS, CLEAR_ERRORS, CONVERT_LINK, GET_CONVERT_LINK, REDIRECT_LINK } from './types';
 
-export const convertLink = (link) => dispatch => {
+export const convertLink = (linkImported) => dispatch => {
   // console.log('***' + link.linkImported)
 
-  axios.post('/api/links/converter', link)
+  axios.post('/api/links/converter', linkImported)
     .then(res => dispatch({
       type: CONVERT_LINK,
       payload: res.data
-    })).catch(err => dispatch({
-    type: GET_ERRORS,
-    payload: err.response.data
-  }));
+    })).then(res => dispatch({
+    type: CLEAR_ERRORS
+  }))
+    .catch(err => dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    }));
 };
 
 export const getConvertLink = (link) => dispatch => {
@@ -40,14 +43,18 @@ export const redirectLink = (linkcode) => dispatch => {
 
 export const addLink = (linkComming) => dispatch => {
   axios.post('/api/links/savelink', linkComming)
-    .then(res => dispatch({
-      type: ADD_LINK,
-      payload: res.data
-    }))
-    .catch(err => dispatch({
-      type: GET_ERRORS,
-      payload: err.response.data
-    }));
+    .then(res => {
+      // console.log('works')
+      dispatch({
+        type: ADD_LINK,
+        payload: res.data
+      });})
+    .catch(err => {
+      // console.log("don't")
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      });});
 };
 
 export const getLink = (id) => dispatch => {
@@ -78,10 +85,35 @@ export const getLinks = () => dispatch => {
 
 export const deleteLink = (id) => dispatch => {
   axios.delete(`/api/links/deletelink/${id}`)
-    .then(res => dispatch({
-      type: DELETE_LINK,
-      payload: id // in our reducer, we want to delete a post, locally
-    }))
+    .then(res => {
+      console.log('works');
+      console.log(id);
+
+      dispatch({
+        type: DELETE_LINK,
+        payload: id // in our reducer, we want to delete a post, locally
+      });})
+    .catch(err => {
+
+      console.log('dosent');
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      });});
+};
+
+export const shareLink = (id) => dispatch => {
+  axios.post(`/api/links/share/${id}`)
+    .then(res => dispatch(getLinks()))
+    .catch(err => dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    }));
+};
+
+export const unshareLink = (id) => dispatch => {
+  axios.post(`/api/links/unshare/${id}`)
+    .then(res => dispatch(getLinks()))
     .catch(err => dispatch({
       type: GET_ERRORS,
       payload: err.response.data

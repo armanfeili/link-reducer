@@ -19,16 +19,6 @@ class Navbar extends Component {
     const authLinks = ( // logOut is not a <Link> and becasue of it's just a click event, we can use <a>, it's not actually going anywhere // in authLinks we wnat to have logOut button and a link to dashboard,
       <ul className="navbar-links">
         <li className="nav-item">
-          <Link className="nav-link" to="/sharedlinks">
-            Shared links
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link" to="/dashboard">
-            Dashboard
-          </Link>
-        </li>
-        <li className="nav-item">
           <Link
             className="nav-link"
             onClick={this.onLogoutClick.bind(this)}
@@ -42,6 +32,16 @@ class Navbar extends Component {
               title="You must have a Gravatar connected to your email to display an image"
             />
             Logout
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to="/sharedlinks">
+            Shared links
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to="/dashboard">
+            Dashboard
           </Link>
         </li>
       </ul>

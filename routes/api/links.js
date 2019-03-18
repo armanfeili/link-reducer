@@ -10,6 +10,7 @@ const Comment = require('../../models/Comment');
 const passport = require('passport');
 
 const validateCommentInput = require('../../validation/comment');
+const validateLinkInput = require('../../validation/linkProduce');
 
 const addhttp = url => {
   if (!/^(?:f|ht)tps?\:\/\//.test(url)) {
@@ -40,7 +41,14 @@ router.get('/test', (req, res) => {
 // @desc    Reduce a link and save it, so always anyone can click it and redirect to the real url link.
 // @access  Public
 router.post('/converter', (req, res) => {
-  const errors = {};
+  const { errors, isValid } = validateLinkInput(req.body); // req.body contains name,email,password . so with ES6 technic of destruction,
+  // we sent the coming return-value from validateLinkInput() to variables of 'errors' and 'isValid'
+
+  // check validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   const linkImported = req.body.linkImported;
   // console.log(req.body.linkImported)
 
@@ -136,6 +144,7 @@ router.post('/', (req, res) => {
 router.post('/savelink', passport.authenticate('jwt', { session: false }), (req, res) => {
   const errors = {};
   const linkComming = req.body.linkComming; // the link we want to save
+  console.log(linkComming);
   // reduce the link
   // res.json('it works')
   User.findOne({ _id: req.user._id}).then(user => {
@@ -159,7 +168,11 @@ router.post('/savelink', passport.authenticate('jwt', { session: false }), (req,
 
         user.links += 1;
         user.save();
-        newLink.save().then(link => res.json(link)).catch(err => res.json(err));
+        console.log('saving');
+        newLink.save().then(link => {
+          res.json(link);
+          return link;
+        }).catch(err => res.json(err));
       }
     });
   });
@@ -189,7 +202,7 @@ router.get('/getlink/:id', passport.authenticate('jwt', { session: false }), (re
 router.get('/getlinks', passport.authenticate('jwt', { session: false }), (req, res) => {
   const errors = {};
   User.findOne({ _id: req.user._id}).then(user => {
-    console.log(user);
+    // console.log(user)
 
     Link.find({user: req.user.id})
       .sort({ date: -1 })
@@ -201,6 +214,7 @@ router.get('/getlinks', passport.authenticate('jwt', { session: false }), (req, 
         }
 
         res.json(links);
+        return links;
       }).catch((err) => {
       res.status(400).json({links: "can't get the links"});
     });
@@ -214,15 +228,18 @@ router.delete('/deletelink/:id', passport.authenticate('jwt', { session: false }
   const errors = {};
   User.findOne({ _id: req.user._id }).then(user => {
     Link.findById(req.params.id).then(link => { // check if the link is already exists
+      console.log(req.params.id);
+
       // Check for post owner
-      if (link.user.toString() !== req.user.id) { // post.user is an id and not string, so we used toString()
+      if (link.user.toString() !== req.user.id) { // link.user is an id and not string, so we used toString()
         // user is << user: req.user.id >> 
         return res.status(404).json({ notauthorized: 'User not authorized' });
       }
 
       // Delete
       link.delete().then(() => res.json({ success: true }));
-    });
+    })
+      .catch(err => res.status(404).json(err));
   });
 });
 
@@ -235,7 +252,11 @@ router.post('/share/:id', passport.authenticate('jwt', { session: false }), (req
   User.findOne({ _id: req.user._id }).then(user => {
     Link.findById(req.params.id).then(link => { // check if the link is already exists
       console.log(link);
-      link.shared = true;
+      if (link.shared === false) {
+        link.shared = true;
+      }else {
+        link.shared = false;
+      }
 
       link.save().then(link => res.json(link)).catch(err => res.json(err));
     });

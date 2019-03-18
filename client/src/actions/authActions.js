@@ -38,7 +38,7 @@ export const loginUser = (userData) => dispatch => {
       // token includes : payload = { id: user.id, name: user.name, avatar: user.avatar }
       const {token} = res.data; // const token = res.data.token
       // create a variable named 'jwtToken' and pass the token and add it to localStorage
-      localStorage.setItem('jwtToken'.token);
+      localStorage.setItem('jwtToken', token);
       // set token to Auth header // // this will go to be used in any private routes
       setAuthToken(token); // when this function get called, a header will add to http request with key of Authorization and value of token
       // Decode token to get userData

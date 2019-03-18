@@ -2,8 +2,15 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import classnames from "classnames";
 
-import { convertLink } from "../../actions/linkActions";
+import {
+  convertLink,
+  addLink,
+  getLinks,
+  deleteLink,
+  shareLink
+} from "../../actions/linkActions";
 
 import { FaExchangeAlt } from "react-icons/fa";
 
@@ -11,13 +18,18 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 
 // import {linkComming} from '../../actions/linkActions'
 import InputGroup from "../common/InputGroup";
-class Landing extends Component {
-  constructor(props) {
-    super(props);
+
+import { MdClose } from "react-icons/md";
+
+class Dashboard extends Component {
+  constructor() {
+    super();
     this.state = {
       pastelink: "",
       linkComming: "",
-      copied: false
+      copied: false,
+      links: [],
+      errors: {}
     };
     console.log(this.state.linkComming);
 
@@ -29,6 +41,7 @@ class Landing extends Component {
     this.onChange2 = this.onChange2.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.copyText = this.copyText.bind(this);
+    this.onAddLink = this.onAddLink.bind(this);
   }
 
   onChange(event) {
@@ -67,33 +80,86 @@ class Landing extends Component {
     // copyText.execCommand("copy");
   }
 
-  // componentDidMount() {
-  //   // this.props.convertLink(this.state.pastelink);
-  //   this.setState({
-  //     linkComming: this.props.mainLink.linkConvertedObject.convertedUrl
-  //   });
-  // }
+  onAddLink(e) {
+    const link = {
+      linkComming: this.props.mainLink.linkConvertedObject.convertedUrl
+    };
+    this.props.addLink(link);
+  }
+  componentDidMount() {
+    // this.props.convertLink(this.state.pastelink);
+    this.setState({
+      linkComming: this.props.mainLink.linkConvertedObject.convertedUrl
+    });
+    this.props.getLinks();
+    // setTimeout(() => {
+    // }, 3000);
+  }
 
-  componentDidUpdate(prevProps) {
-    // if (prevProps.linkComming !== this.props.linkComming) {
-    //   this.setState({
-    //     linkComming: this.props.mainLink.linkConvertedObject.convertedUrl
-    //   });
-    // } // always make sure that errors in component state in similar to errors in application state
-    if (prevProps.linkComming === "") {
-      this.setState({
-        linkComming: this.props.mainLink.linkConvertedObject.convertedUrl
-      });
-    } // always make sure that errors in component state in similar to errors in application state
-  } // this always rerun component,till the 'then()' part of the action happens
+  componentDidUpdate() {}
+  //   componentDidUpdate(prevProps) {
+  //     // if (prevProps.linkComming !== this.props.linkComming) {
+  //     //   this.setState({
+  //     //     linkComming: this.props.mainLink.linkConvertedObject.convertedUrl
+  //     //   });
+  //     // } // always make sure that errors in component state in similar to errors in application state
+  //     if (prevProps.linkComming === "") {
+  //       this.setState({
+  //         linkComming: this.props.mainLink.linkConvertedObject.convertedUrl
+  //       });
+  //     } // always make sure that errors in component state in similar to errors in application state
+  //   } // this always rerun component,till the 'then()' part of the action happens
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
+
+  onShareLink(id) {
+    this.props.shareLink(id);
+  }
+
+  onDeleteLink(id) {
+    this.props.deleteLink(id);
+  }
 
   render() {
     const { errors } = this.state;
 
+    const links = this.props.link.links;
+    const linksLoop = [];
+
+    for (let i = 0; i < links.length; i++) {
+      linksLoop[i] = (
+        <li className="link-item" key={links[i]._id}>
+          <p className="link-text">{links[i].textlink}</p>
+          <button
+            className={classnames("share-link", {
+              "shared vis": links[i].shared === true
+            })}
+            onClick={this.onShareLink.bind(this, links[i]._id)}
+          >
+            share
+          </button>
+          <button
+            className="delete-link"
+            onClick={this.onDeleteLink.bind(this, links[i]._id)}
+          >
+            <MdClose />
+          </button>
+        </li>
+      );
+    }
+
+    const linksList = linksLoop.map(link => {
+      return link;
+    });
+
     return (
       <div>
         <section className="get-link-part">
-          <h1>Link Reducer</h1>
+          <h1>Dashboard</h1>
           <form className="links-form" noValidate onSubmit={this.onSubmit}>
             <p className="link-description">paste a link here.</p>
             <InputGroup
@@ -103,7 +169,7 @@ class Landing extends Component {
               name="pastelink"
               value={this.state.pastelink}
               onChange={this.onChange}
-              errors={errors}
+              error={errors.linkImported}
             />
             <button onSubmit={this.onSubmit} className="copy-button">
               <FaExchangeAlt />
@@ -123,6 +189,8 @@ class Landing extends Component {
               errors={errors}
               id="Progress1"
             />
+            {/* {console.log(errors.pastelink)} */}
+
             <CopyToClipboard
               text={this.props.mainLink.linkConvertedObject.convertedUrl}
               onCopy={() => this.setState({ copied: true })}
@@ -131,21 +199,31 @@ class Landing extends Component {
                 copy
               </button>
             </CopyToClipboard>
+            <button className="save-button" onClick={this.onAddLink}>
+              Save
+            </button>
           </form>
         </section>
-        <section className="goTo-register-or-login">
-          <div className="direct-buttons">
-            <p className="direct-text">Or do more...</p>
-            <button className="signup-button">
-              <Link to="/register" className="signup-button-link">
-                Sign up
-              </Link>
-            </button>
-            <button className="login-button">
-              <Link to="/login" className="login-button-link">
-                Login
-              </Link>
-            </button>
+        <section className="link-section">
+          <div className="link-section-inner">
+            <h3 className="direct-text">*Links*</h3>
+            <div>
+              <div className="link-part">
+                <div className="link-box">
+                  <h3 className="links-header">here are your links</h3>
+                  <div className="links-list-box">
+                    <ul className="links-list">{linksList}</ul>
+                  </div>
+                </div>
+              </div>
+              <div className="AD-box">
+                <ul className="AD-list">
+                  <li className="AD-item">ad</li>
+                  <li className="AD-item">ad</li>
+                  <li className="AD-item">ad</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </section>
       </div>
@@ -153,16 +231,21 @@ class Landing extends Component {
   }
 }
 
-Landing.propTypes = {
-  convertLink: PropTypes.func.isRequired
+Dashboard.propTypes = {
+  convertLink: PropTypes.func.isRequired,
+  addLink: PropTypes.func.isRequired,
+  errors: PropTypes.object,
+  mainLink: PropTypes.object.isRequired,
+  link: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
+  mainLink: state.mainLink,
   errors: state.errors,
-  mainLink: state.mainLink
+  link: state.link
 });
 
 export default connect(
   mapStateToProps,
-  { convertLink }
-)(Landing);
+  { convertLink, addLink, getLinks, deleteLink, shareLink }
+)(Dashboard);
