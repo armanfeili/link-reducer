@@ -12,6 +12,8 @@ const passport = require('passport');
 // Load Input Validation
 const validateRegisterInput = require('../../validation/register');
 const validateLoginInput = require('../../validation/login');
+const validateChangePasswordInput = require('../../validation/change-password');
+const validateEditProfileInput = require('../../validation/edit-profile');
 
 // @route   GET api/users/test
 // @desc    Tests users route
@@ -177,7 +179,13 @@ router.post('/login', (req, res) => {
 // $desc    Edit profile
 // @access  Private
 router.post('/editprofile', passport.authenticate('jwt', { session: false }), (req, res) => {
-  const errors = {};
+  const { errors, isValid } = validateEditProfileInput(req.body); // req.body contains name,email,password . so with ES6 technic of destruction,
+  // we sent the coming return-value from validateChangePasswordInput() to variables of 'errors' and 'isValid' 
+
+  // check validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
   const email = req.body.email;
   const name = req.body.name;
   User.findOne({_id: req.user._id}).then(user => { // at first we find the current user
@@ -216,13 +224,19 @@ router.post('/editprofile', passport.authenticate('jwt', { session: false }), (r
 
 // tips: after we changed the password , we need to redirect the user into login page (logout the user)
 router.post('/changepasswrod', passport.authenticate('jwt', { session: false }), (req, res) => {
-  const errors = {};
+  const { errors, isValid } = validateChangePasswordInput(req.body); // req.body contains name,email,password . so with ES6 technic of destruction,
+  // we sent the coming return-value from validateChangePasswordInput() to variables of 'errors' and 'isValid' 
+
+  // check validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
   const oldPassword = req.body.oldPassword;
   const newPassword = req.body.newPassword;
   const confirmNewPassword = req.body.confirmNewPassword;
 
   User.findOne({_id: req.user._id}).then(user => {
-    console.log(user);
+    // console.log(user)
     console.log(user.password);
     console.log(oldPassword);
     bcrypt.compare(oldPassword, user.password).then(isMatch => {

@@ -27,9 +27,14 @@ import Footer from './components/layout/Footer';
 
 import Login from './components/auth/login';
 import Register from './components/auth/register';
+import Users from './components/users/users';
 import NotFound from './components/not-found/NotFound';
 
 import Dashboard from './components/dashboard/Dashboard';
+import SharedLinks from './components/sharedLinks/sharedLinks';
+import Comment from './components/comments/comment';
+import EditProfile from './components/edit-profile/edit-profile';
+import ChangePassword from './components/change-password/change-password';
 
 // Check for token - if we go to browser>inspect>Application>Local Storage , we can see our token 
 if (localStorage.jwtToken) {
@@ -73,11 +78,24 @@ class App extends Component {
               <div className='container'>
                 <Route exact path='/register' component={Register} />
                 <Route exact path='/login' component={Login} />
+                <Route exact path='/profiles' component={Users} />
                 {/* <Route exact path='/profiles' component={Profiles} /> */}
                 {/* <Route exact path='/profile/:handle' component={Profile} /> */}
                 <Switch>
                   {/* for every private route we just need to wrap it in <switch>, and it prevent from strange redirect issues */}
                   <PrivateRoute exact path='/dashboard' component={Dashboard} />
+                </Switch>
+                <Switch>
+                  <PrivateRoute exact path='/sharedlinks' component={SharedLinks} />
+                </Switch>
+                <Switch>
+                  <PrivateRoute exact path='/comments/:id' component={Comment} />
+                </Switch>
+                <Switch>
+                  <PrivateRoute exact path='/edit-profile' component={EditProfile} />
+                </Switch>
+                <Switch>
+                  <PrivateRoute exact path='/change-password' component={ChangePassword} />
                 </Switch>
                 <Route exact path='/not-found' component={NotFound} />
               </div>

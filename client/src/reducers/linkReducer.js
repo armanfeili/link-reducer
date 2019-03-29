@@ -3,12 +3,14 @@ import {
   GET_LINKS,
   GET_LINK,
   DELETE_LINK,
-  LINK_LOADING
+  LINK_LOADING,
+  GET_SHARED_LINKS
 } from "../actions/types";
 
 const initialState = {
   links: [],
   link: {},
+  sharedLinks: [],
   linkLoading: false,
   commentLoading: false
 };
@@ -43,7 +45,12 @@ export default function(state = initialState, action) {
         ...state,
         links: state.links.filter(link => link._id !== action.payload)
       };
-
+    case GET_SHARED_LINKS:
+      return {
+        ...state,
+        sharedLinks: action.payload,
+        linkLoading: false
+      };
     default:
       return state;
   }

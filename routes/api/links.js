@@ -191,6 +191,8 @@ router.get('/getlink/:id', passport.authenticate('jwt', { session: false }), (re
         return res.status(404).json(errors);
       } else {
         res.json(link);
+
+        return link;
       }
     }).catch(err => res.status(404).json({ nopostfound: 'No link found by that id' }));
   });
@@ -227,6 +229,10 @@ router.get('/getlinks', passport.authenticate('jwt', { session: false }), (req, 
 router.delete('/deletelink/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
   const errors = {};
   User.findOne({ _id: req.user._id }).then(user => {
+    user.links -= 1;
+    console.log(user);
+    console.log(user.links);
+    user.save();
     Link.findById(req.params.id).then(link => { // check if the link is already exists
       console.log(req.params.id);
 
@@ -237,6 +243,7 @@ router.delete('/deletelink/:id', passport.authenticate('jwt', { session: false }
       }
 
       // Delete
+
       link.delete().then(() => res.json({ success: true }));
     })
       .catch(err => res.status(404).json(err));
@@ -275,7 +282,7 @@ router.delete('/unshare/:id', passport.authenticate('jwt', { session: false }), 
       //   errors.notExist = 'we have no such this link to share'
       //   res.status(404).json(errors)
       // }
-      console.log(link);
+
       link.shared = false;
 
       link.save().then(link => res.json(link)).catch(err => res.json(err));
@@ -294,6 +301,7 @@ router.get('/sharedlinks', passport.authenticate('jwt', { session: false }), (re
       res.status(404).json(errors);
     } else {
       res.json(links);
+      return links;
     }
   });
 });
@@ -311,8 +319,12 @@ router.post('/like/:id', passport.authenticate('jwt', { session: false }), (req,
       // Add user id to likes array - likes array is an array of users (who liked the post).
       link.likes.unshift({ user: req.user.id }); // each like has it's own _id and user(id)
       link.save().then(post => res.json(post));
+      return link;
     })
-      .catch(err => res.status(404).json(err));
+      .catch(err => {
+        console.log(err);
+
+        res.status(404).json(err);});
   });
 });
 
@@ -332,6 +344,7 @@ router.delete('/unlike/:id', passport.authenticate('jwt', { session: false }), (
       link.likes.splice(removeIndex, 1);
       // save to DB
       link.save().then(link => res.json(link));
+      return link;
     })
       .catch(err => res.status(404).json(err));
   });
@@ -342,26 +355,43 @@ router.delete('/unlike/:id', passport.authenticate('jwt', { session: false }), (
 // @access  Private
 router.post('/comments/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
   const { errors, isValid } = validateCommentInput(req.body); // we pass all the req.body into validation file
+  console.log('yo');
+  console.log(req.body);
+
   if (!isValid) {
+    console.log('here');
     return res.status(400).json(errors);
   }
   User.find({ _id: req.user._id }).then(user => {
+    // console.log(user)
+
     Link.findOne({_id: req.params.id}).then(link => {
-      const newComment = new Comment({
-        user: req.user.id,
-        text: req.body.text,
-        name: req.user.name,
-        avatar: req.user.avatar,
-        photo: req.user.photo
-      });
+      if (link) {
+        // console.log(link)
+        // console.log(req.body.text)
 
-      // add to comments array
-      link.comments.unshift(newComment);
+        const newComment = new Comment({
+          user: req.user.id,
+          text: req.body.text,
+          name: req.user.name,
+          avatar: req.user.avatar,
+          photo: req.user.photo
+        });
 
-      link.save()
-        .then(link => res.json(link))
-        .catch(err => res.status(400).json(err));
-    });
+        // add to comments array
+        link.comments.unshift(newComment);
+
+        link.save()
+          .then(link => res.json(link))
+          .catch(err => res.status(400).json(err));
+        return link;
+      }else {
+        console.log('no link');
+      }
+    })
+      .catch(err => {
+        console.log(err);
+        res.status(404).json(err);});
   });
 });
 

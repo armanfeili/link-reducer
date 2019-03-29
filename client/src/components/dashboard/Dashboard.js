@@ -11,6 +11,7 @@ import {
   deleteLink,
   shareLink
 } from "../../actions/linkActions";
+import { getCurrentProfile } from "../../actions/authActions";
 
 import { FaExchangeAlt } from "react-icons/fa";
 
@@ -31,7 +32,7 @@ class Dashboard extends Component {
       links: [],
       errors: {}
     };
-    console.log(this.state.linkComming);
+    // console.log(this.state.linkComming);
 
     this.myRef = React.createRef();
 
@@ -87,6 +88,13 @@ class Dashboard extends Component {
     this.props.addLink(link);
   }
   componentDidMount() {
+    // if (this.props.auth) {
+    //   if (!this.props.auth.isAuthenticated) {
+    //     this.props.history.push("/login");
+    //   }
+    // } else if (!this.props.auth) {
+    //   this.props.history.push("/login");
+    // }
     // this.props.convertLink(this.state.pastelink);
     this.setState({
       linkComming: this.props.mainLink.linkConvertedObject.convertedUrl
@@ -94,6 +102,7 @@ class Dashboard extends Component {
     this.props.getLinks();
     // setTimeout(() => {
     // }, 3000);
+    this.props.getCurrentProfile(); // we want to get current profile any time we render this route
   }
 
   componentDidUpdate() {}
@@ -224,6 +233,11 @@ class Dashboard extends Component {
                 </ul>
               </div>
             </div>
+            <div>
+              <Link to="/edit-profile" className="setting-button-link">
+                <button className="setting-button">Setting</button>
+              </Link>
+            </div>
           </div>
         </section>
       </div>
@@ -247,5 +261,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { convertLink, addLink, getLinks, deleteLink, shareLink }
+  { convertLink, addLink, getLinks, deleteLink, shareLink, getCurrentProfile }
 )(Dashboard);

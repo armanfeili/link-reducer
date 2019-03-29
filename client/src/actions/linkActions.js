@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { LINK_LOADING, GET_LINK, GET_LINKS, ADD_LINK, DELETE_LINK, GET_ERRORS, CLEAR_ERRORS, CONVERT_LINK, GET_CONVERT_LINK, REDIRECT_LINK } from './types';
+import { LINK_LOADING, GET_LINK, GET_LINKS, ADD_LINK, DELETE_LINK, GET_ERRORS, CLEAR_ERRORS, CONVERT_LINK, GET_CONVERT_LINK, REDIRECT_LINK, GET_SHARED_LINKS } from './types';
 
 export const convertLink = (linkImported) => dispatch => {
   // console.log('***' + link.linkImported)
@@ -58,7 +58,7 @@ export const addLink = (linkComming) => dispatch => {
 };
 
 export const getLink = (id) => dispatch => {
-  dispatch(setLinkLoading());
+  // dispatch(setLinkLoading())
   axios.get(`/api/links/getlink/${id}`)
     .then(res => dispatch({
       type: GET_LINK,
@@ -120,27 +120,56 @@ export const unshareLink = (id) => dispatch => {
     }));
 };
 
+export const getSharedLinks = () => dispatch => {
+  axios.get('/api/links/sharedlinks')
+    .then(res => {
+      dispatch({
+        type: GET_SHARED_LINKS,
+        payload: res.data
+      });})
+    .catch(err => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: null
+      });});
+};
+
 export const addLikeToLink = (id) => dispatch => {
   axios.post(`/api/links/like/${id}`)
-    .then(res => dispatch(getLinks()))
-    .catch(err => dispatch({
-      type: GET_ERRORS,
-      payload: err.response.data
-    }));
+    .then(res => {
+      dispatch(getLink(id));
+    })
+    .then(res => {
+      dispatch(getSharedLinks());
+    })
+    .catch(err => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      });});
 };
 
 export const deleteLikeFromLink = (id) => dispatch => {
   axios.delete(`/api/links/unlike/${id}`)
-    .then(res => dispatch(getLinks()))
-    .catch(err => dispatch({
-      type: GET_ERRORS,
-      payload: err.response.data
-    }));
+    .then(res => {
+      dispatch(getLink(id));
+    })
+    .then(res => {
+      dispatch(getSharedLinks());
+    })
+    .catch(err => {
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      });});
 };
 
-export const addComment = (id, commentData) => dispatch => {
-  axios.post(`/api/links/comments/${id}`, commentData)
-    .then(res => dispatch(getLink(id)))
+export const addComment = (linkId, commentData) => dispatch => {
+  // console.log(linkId)
+  // console.log(commentData)
+  dispatch(clearErrors());
+  axios.post(`/api/links/comments/${linkId}`, commentData)
+    .then(res => dispatch(getLink(linkId)))
     .catch(err => dispatch({
       type: GET_ERRORS,
       payload: err.response.data
@@ -150,6 +179,8 @@ export const addComment = (id, commentData) => dispatch => {
 // export const getComment = ()=>dispatch=>{}
 // export const getComments = ()=>dispatch=>{}
 export const deleteComment = (id, comment_id) => dispatch => {
+  console.log(id, comment_id);
+
   axios.delete(`/api/links/comments/${id}/${comment_id}`)
     .then(res => dispatch(getLink(id)))
     .catch(err => dispatch({

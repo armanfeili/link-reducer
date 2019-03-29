@@ -22,6 +22,11 @@ export const CONVERT_LINK = 'CONVERT_LINK';
 export const GET_CONVERT_LINK = 'GET_CONVERT_LINK';
 export const REDIRECT_LINK = 'REDIRECT_LINK';
 
+export const GET_SHARED_LINKS = 'GET_SHARED_LINKS';
+export const EDIT_PROFILE = 'EDIT_PROFILE';
+export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
+export const DELETE_ACCOUNT = 'DELETE_ACCOUNT';
+
 // export const COMMENT_LOADING = 'COMMENT_LOADING'
 // export const GET_COMMENTS = 'GET_COMMENTS'
 // export const GET_COMMENT = 'GET_COMMENT'

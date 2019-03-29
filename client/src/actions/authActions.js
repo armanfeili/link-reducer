@@ -1,7 +1,7 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from '../utils/setAuthToken';
-import { CLEAR_CURRENT_PROFILE, GET_ERRORS, SET_CURRENT_USER, PROFILE_LOADING, GET_PROFILE, GET_PROFILES } from './types';
+import { CLEAR_CURRENT_PROFILE, GET_ERRORS, SET_CURRENT_USER, PROFILE_LOADING, GET_PROFILE, GET_PROFILES, EDIT_PROFILE, DELETE_ACCOUNT, CHANGE_PASSWORD } from './types';
 
 // // Register user
 // export const registerUser = (userData, history) => dispatch => {
@@ -58,9 +58,8 @@ export const logoutUser = () => dispatch => {
   localStorage.removeItem('jwtToken');
   setAuthToken(false); // it means there is no token
   dispatch(setCurrentUser({}));
-  // setCurrentUser() will send an empty object as payload, so user will be like { },
-  // and isAuthenticated: !isEmpty(action.payload), so because payload is an empty object, isAuthenticated will be false
-
+// setCurrentUser() will send an empty object as payload, so user will be like { },
+// and isAuthenticated: !isEmpty(action.payload), so because payload is an empty object, isAuthenticated will be false
 };
 
 export const setCurrentUser = decoded => { // this will get the decoded token and return an action 
@@ -98,8 +97,47 @@ export const getProfiles = () => dispatch => {
     }));
 };
 
+export const editProfile = (userData, history) => dispatch => {
+  axios.post('/api/users/editprofile', userData)
+    .then(res => dispatch({
+      type: EDIT_PROFILE,
+      payload: {}
+    }))
+    .then(res => {
+      console.log('changing');
+      history.push('/login');
+    }) // if axios.post worked successfully we ridirect /register route to /login
+    .catch(err => {
+      dispatch({ // calling dispatch , help us to send an action
+        type: GET_ERRORS,
+        payload: err.response.data
+      });
+    });
+};
+
+export const changePassword = (userData, history) => dispatch => {
+  axios.post('/api/users/changepasswrod', userData)
+    .then(res => dispatch({
+      type: CHANGE_PASSWORD,
+      payload: {}
+    }))
+    .then(res => history.push('/login'))
+    .catch(err => {
+      console.log(err);
+
+      dispatch({ // calling dispatch , help us to send an action
+        type: GET_ERRORS,
+        payload: err.response.data
+      });
+    });
+};
+
 export const deleteAccount = (history) => dispatch => {
   axios.delete('/api/users/deleteuser')
+    .then(res => dispatch({
+      type: DELETE_ACCOUNT,
+      payload: {}
+    }))
     .then(res => {
       dispatch({
         type: SET_CURRENT_USER, // it will go to authReducer and set the user as empty object and isAuthenticated will set to false.

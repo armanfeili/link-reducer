@@ -3,7 +3,10 @@ import {
   PROFILE_LOADING,
   GET_PROFILE,
   GET_PROFILES,
-  CLEAR_CURRENT_PROFILE
+  CLEAR_CURRENT_PROFILE,
+  EDIT_PROFILE,
+  DELETE_ACCOUNT,
+  CHANGE_PASSWORD
 } from "../actions/types";
 import isEmpty from "../validation/is_empty";
 
@@ -47,6 +50,21 @@ export default function(state = initialState, action) {
       return {
         ...state,
         profile: null
+      };
+    case EDIT_PROFILE:
+      return {
+        ...state,
+        isAuthenticated: false
+      };
+    case CHANGE_PASSWORD:
+      return {
+        ...state
+        // isAuthenticated: false
+      };
+    case DELETE_ACCOUNT:
+      return {
+        ...state,
+        isAuthenticated: false
       };
     default:
       return state;

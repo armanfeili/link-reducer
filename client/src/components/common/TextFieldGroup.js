@@ -5,13 +5,13 @@ import PropTypes from 'prop-types';
 const TextFieldGroup = ({ name, value, placeholder, label, error, info, type, onChange, disabled}) => {
   return (
     <div className='formGroup'>
-      <input
+      <textarea
         type={type}
         name={name}
         value={value}
         placeholder={placeholder}
         label={label}
-        className={classnames('form-control', {
+        className={classnames('comment-text', {
                      'is-invalid': error // if error was true, 'is-invalid' will be added to className,if error was false, it will be ignored
                    })}
         onChange={onChange}
