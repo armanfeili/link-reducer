@@ -395,7 +395,6 @@
   .shared-links-text {
     float: left;
     margin-right: 10px;
-    margin-top: 7px;
     margin-left: 18px;
     color: #fff;
     overflow-x: overlay;
@@ -422,7 +421,7 @@
   .shared-name-container {
     width: 80%;
     text-align: left;
-    margin-top: 12px;
+    margin-top: 3px;
   }
   .shared-comments {
     font-size: 80%;
