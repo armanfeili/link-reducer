@@ -1,25 +1,33 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Link, withRouter } from "react-router-dom";
 
-import TextFieldGroup from '../common/TextFieldGroup';
-import { getLink, addLikeToLink, deleteLikeFromLink, addComment, deleteComment, addLikeToComment, deleteLikeFromComment } from '../../actions/linkActions';
+import TextFieldGroup from "../common/TextFieldGroup";
+import {
+  getLink,
+  addLikeToLink,
+  deleteLikeFromLink,
+  addComment,
+  deleteComment,
+  addLikeToComment,
+  deleteLikeFromComment
+} from "../../actions/linkActions";
 
 // import classnames from 'classnames'
-import { FaHeart } from 'react-icons/fa';
-import { FaRegHeart } from 'react-icons/fa';
-import { MdClose } from 'react-icons/md';
+import { FaHeart } from "react-icons/fa";
+import { FaRegHeart } from "react-icons/fa";
+import { MdClose } from "react-icons/md";
 
 class Comment extends Component {
-  constructor () {
+  constructor() {
     super();
     this.state = {
       like: {},
-      comment: '',
+      comment: "",
       //   userFound: {},
-      linkId: '',
+      linkId: "",
       errors: {}
     };
 
@@ -27,11 +35,11 @@ class Comment extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const particularLink = this.props.match.params.id;
 
     // this.setState({userId: this.props.auth.user.id})
-    this.setState({linkId: particularLink});
+    this.setState({ linkId: particularLink });
     this.props.getLink(this.props.match.params.id);
   }
   //   componentDidUpdate () {
@@ -40,25 +48,25 @@ class Comment extends Component {
   //     // }
   //   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
     }
   }
 
   // id, commentData
-  onSubmit (e) {
+  onSubmit(e) {
     e.preventDefault();
     const linkId = this.props.match.params.id;
     const text = { text: this.state.comment };
     this.props.addComment(linkId, text);
-    this.setState({comment: ''});
+    this.setState({ comment: "" });
   }
-  onChange (e) {
+  onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
   //   onLike (likes) {
-  onLike (link) {
+  onLike(link) {
     // we want to see if the user liked the link before or not, if user id was in the link info
     // so we should show the liked button, if it wasn't we should show the like button
     if (link) {
@@ -75,7 +83,7 @@ class Comment extends Component {
     this.props.getLink(this.props.match.params.id);
   }
 
-  onCommentLike (link, comment) {
+  onCommentLike(link, comment) {
     if (comment) {
       let userId = this.props.auth.user.id;
       let userFound = comment.likes.find(x => x.user === userId);
@@ -90,18 +98,18 @@ class Comment extends Component {
     }
   }
 
-  onCommentDelete (commentId) {
+  onCommentDelete(commentId) {
     const linkId = this.props.match.params.id;
     const comment_id = commentId;
     // console.log(comment_id)
-    const commentData = {id: linkId,comment_id: commentId};
+    const commentData = { id: linkId, comment_id: commentId };
 
     this.props.deleteComment(linkId, comment_id);
   }
 
   // we want to find out if the user, liked the post or not
   // this function is for implementing classnames package
-  findUserLike (likes) {
+  findUserLike(likes) {
     // console.log(likes)
 
     if (likes) {
@@ -115,8 +123,8 @@ class Comment extends Component {
     }
   }
 
-  render () {
-    const { errors} = this.state;
+  render() {
+    const { errors } = this.state;
     const link = this.props.link.link;
     const commentList = this.props.link.link.comments
       ? this.props.link.link.comments
@@ -130,27 +138,38 @@ class Comment extends Component {
     if (commentList !== null) {
       for (let i = 0; i < commentList.length; i++) {
         commentLoop[i] = (
-          <li className='comment-users-item' key={commentList[i]._id}>
-            <span className='comment-second-name'>{commentList[i].name} :</span>
-            <p className='comment-second-links-text'>
-              {commentList[i].text}
-            </p>
-            <button className='comment-second-likes' onClick={this.onCommentLike.bind(this, link, commentList[i])}>
-              {this.findUserLike(commentList[i].likes) ? (
-                 <FaHeart className='comment-like' />
-                 ) : (
-                 <FaRegHeart className='comment-dislike' />
-                 )}
-              <p className='comment-like-number'>
-                {' ' + commentList[i].likes.length}
-                {/* {console.log(linkNumber)} */}
-              </p>
-            </button>
-            {commentList[i].user === this.props.auth.user.id || link.user === this.props.auth.user.id ? (
-               <button className='comment-second-delete' onClick={this.onCommentDelete.bind(this, commentList[i]._id)}>
-                 <MdClose />
-               </button>
-               ) : null}
+          <li className="comment-users-item" key={commentList[i]._id}>
+            <div className="left-part-comment">
+              <span className="comment-second-name">
+                {commentList[i].name} :
+              </span>
+              <p className="comment-second-links-text">{commentList[i].text}</p>
+            </div>
+            <div className="right-part-comment">
+              <button
+                className="comment-second-likes"
+                onClick={this.onCommentLike.bind(this, link, commentList[i])}
+              >
+                {this.findUserLike(commentList[i].likes) ? (
+                  <FaHeart className="comment-like" />
+                ) : (
+                  <FaRegHeart className="comment-dislike" />
+                )}
+                <p className="comment-like-number">
+                  {" " + commentList[i].likes.length}
+                  {/* {console.log(linkNumber)} */}
+                </p>
+              </button>
+              {commentList[i].user === this.props.auth.user.id ||
+              link.user === this.props.auth.user.id ? (
+                <button
+                  className="comment-second-delete"
+                  onClick={this.onCommentDelete.bind(this, commentList[i]._id)}
+                >
+                  <MdClose />
+                </button>
+              ) : null}
+            </div>
           </li>
         );
       }
@@ -164,60 +183,64 @@ class Comment extends Component {
 
     const likeNumber = this.props.link.link.likes
       ? this.props.link.link.likes.length
-      : '-';
+      : "-";
     return (
       <div>
-        <section className='comment-section'>
-          <div className='comment-section-inner'>
-            <h1 className=''>Comments</h1>
-            <div className='comment-container'>
-              <div className='comment-box'>
-                <ul className='comment-list'>
+        <section className="comment-section">
+          <div className="comment-section-inner">
+            <h1 className="">Comments</h1>
+            <div className="comment-container">
+              <div className="comment-box">
+                <ul className="comment-list">
                   {/* {SharedList} */}
-                  <li className='comment-item' key={link._id}>
-                    {/* <Avatar className='shared-avatar' size='70' name='Foo Bar' /> */}
-                    {/* {picture} */}
-                    <div className='comment-name-container'>
-                      <span className='comment-name'>{link.name} :</span>
+                  <li className="comment-item" key={link._id}>
+                    <div className="main-comment-left">
+                      {/* <Avatar className='shared-avatar' size='70' name='Foo Bar' /> */}
+                      {/* {picture} */}
+                      <div className="comment-name-container">
+                        <span className="comment-name">{link.name} :</span>
+                      </div>
+                      <a href={link.textlink} className="comment-links-text">
+                        {link.textlink}
+                      </a>
                     </div>
-                    <a href={link.textlink} className='comment-links-text'>
-                      {link.textlink}
-                    </a>
-                    <button className='comment-likes' onClick={this.onLike.bind(this, link)}>
-                      {this.findUserLike(link.likes) ? (
-                         <FaHeart className='comment-like' />
-                         ) : (
-                         <FaRegHeart className='comment-dislike' />
-                         )}
-                      <p className='comment-like-number'>
-                        {' ' + likeNumber}
-                        {/* {console.log(linkNumber)} */}
-                      </p>
-                    </button>
-                  </li>
-                  <li className='comment-list-item' key={link._id + 1}>
-                    <form action='' onSubmit={this.onSubmit}>
-                      <button className='comment-send'>
-                        send
+                    <div className="main-comment-right">
+                      <button
+                        className="comment-likes"
+                        onClick={this.onLike.bind(this, link)}
+                      >
+                        {this.findUserLike(link.likes) ? (
+                          <FaHeart className="comment-like" />
+                        ) : (
+                          <FaRegHeart className="comment-dislike" />
+                        )}
+                        <p className="comment-like-number">
+                          {" " + likeNumber}
+                          {/* {console.log(linkNumber)} */}
+                        </p>
                       </button>
+                    </div>
+                  </li>
+                  <li className="comment-list-item" key={link._id + 1}>
+                    <form action="" onSubmit={this.onSubmit}>
+                      <button className="comment-send">send</button>
                       <TextFieldGroup
-                        type='text'
-                        name='comment'
-                        placeholder='Write a comment here...'
-                        className='comment-text'
+                        type="text"
+                        name="comment"
+                        placeholder="Write a comment here..."
+                        className="comment-text"
                         value={this.state.comment}
                         onChange={this.onChange}
-                        error={errors.text} />
+                        error={errors.text}
+                      />
                     </form>
                   </li>
                 </ul>
               </div>
             </div>
-            <div className='comment-users-container'>
-              <div className='comment-users-box'>
-                <ul className='comment-users-list'>
-                  {ShowAllComments}
-                </ul>
+            <div className="comment-users-container">
+              <div className="comment-users-box">
+                <ul className="comment-users-list">{ShowAllComments}</ul>
               </div>
             </div>
           </div>
@@ -255,7 +278,8 @@ export default connect(
     addComment,
     deleteComment,
     addLikeToComment,
-  deleteLikeFromComment}
+    deleteLikeFromComment
+  }
 )(withRouter(Comment));
 
 // <div className="comment-users-container">

@@ -114,42 +114,52 @@ class Landing extends Component {
         <section className="get-link-part">
           <h1>Link Reducer</h1>
           <form className="links-form" noValidate onSubmit={this.onSubmit}>
-            <p className="link-description">paste a link here.</p>
-            <InputGroup
-              type="text"
-              className="link-input"
-              placeholder="like: https://www.google.com/"
-              name="pastelink"
-              value={this.state.pastelink}
-              onChange={this.onChange}
-              error={errors.linkImported}
-            />
-            <button onSubmit={this.onSubmit} className="copy-button">
-              <FaExchangeAlt />
-            </button>
-            <p className="link-description link-space">
-              get the short link here.
-            </p>
-            <InputGroup
-              type="text"
-              className="myInput link-input"
-              ref={this.myRef}
-              placeholder="like: https://www.google.com/"
-              name="linkComming"
-              value={this.props.mainLink.linkConvertedObject.convertedUrl || ""}
-              onChange={this.onChange}
-              disabled={true}
-              errors={errors}
-              id="Progress1"
-            />
-            <CopyToClipboard
-              text={this.props.mainLink.linkConvertedObject.convertedUrl}
-              onCopy={() => this.setState({ copied: true })}
-            >
-              <button className="copy-button" onClick={this.copyText}>
-                copy
+            <div className="form-left-field">
+              <p className="link-description">paste a link here.</p>
+              <InputGroup
+                type="text"
+                className="link-input"
+                placeholder="like: https://www.google.com/"
+                name="pastelink"
+                value={this.state.pastelink}
+                onChange={this.onChange}
+                error={errors.linkImported}
+              />
+            </div>
+            <div className="form-right-field">
+              <button onSubmit={this.onSubmit} className="convert-button">
+                <FaExchangeAlt />
               </button>
-            </CopyToClipboard>
+            </div>
+            <div className="form-left-field">
+              <p className="link-description link-space">
+                get the short link here.
+              </p>
+              <InputGroup
+                type="text"
+                className="myInput link-input"
+                ref={this.myRef}
+                placeholder="like: https://www.google.com/"
+                name="linkComming"
+                value={
+                  this.props.mainLink.linkConvertedObject.convertedUrl || ""
+                }
+                onChange={this.onChange}
+                disabled={true}
+                errors={errors}
+                id="Progress1"
+              />
+            </div>
+            <div className="form-right-field">
+              <CopyToClipboard
+                text={this.props.mainLink.linkConvertedObject.convertedUrl}
+                onCopy={() => this.setState({ copied: true })}
+              >
+                <button className="copy-button" onClick={this.copyText}>
+                  copy
+                </button>
+              </CopyToClipboard>
+            </div>
           </form>
         </section>
         <section className="goTo-register-or-login">

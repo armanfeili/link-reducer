@@ -1,39 +1,43 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Link, withRouter } from "react-router-dom";
 
-import { getSharedLinks, addLikeToLink, deleteLikeFromLink } from '../../actions/linkActions';
+import {
+  getSharedLinks,
+  addLikeToLink,
+  deleteLikeFromLink
+} from "../../actions/linkActions";
 
 // import classnames from 'classnames'
-import { FaHeart } from 'react-icons/fa';
-import { FaRegHeart } from 'react-icons/fa';
+import { FaHeart } from "react-icons/fa";
+import { FaRegHeart } from "react-icons/fa";
 
 class SharedLinks extends Component {
-  constructor () {
+  constructor() {
     super();
     this.state = {
       like: {},
       errors: {}
     };
 
-  // this.onChange = this.onChange.bind(this)
-  // this.onSubmit = this.onSubmit.bind(this)
+    // this.onChange = this.onChange.bind(this)
+    // this.onSubmit = this.onSubmit.bind(this)
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.getSharedLinks();
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
     }
   }
 
   //   onLike (likes) {
-  onLike (link) {
+  onLike(link) {
     // we want to see if the user liked the link before or not, if user id was in the link info
     // so we should show the liked button, if it wasn't we should show the like button
 
@@ -43,10 +47,10 @@ class SharedLinks extends Component {
     // console.log(likes.find(x => x.user === userId))
     let userFound = link.likes.find(x => x.user === userId);
     if (userFound) {
-      console.log('it found');
+      console.log("it found");
       this.props.deleteLikeFromLink(link._id);
-    }else {
-      console.log('it didnt found');
+    } else {
+      console.log("it didnt found");
       this.props.addLikeToLink(link._id); // here is the problem
     }
     // for (let i = 0;i < likes.length;i++) {
@@ -66,17 +70,17 @@ class SharedLinks extends Component {
 
     // // if (this.state.like.findOne({like: id})) {
 
-  // if (x === id) {
-  //   console.log('it liked before')
-  // } else {
-  //   console.log('it liked now')
-  //   this.setState({like: {id}})
-  // }
+    // if (x === id) {
+    //   console.log('it liked before')
+    // } else {
+    //   console.log('it liked now')
+    //   this.setState({like: {id}})
+    // }
   }
 
   // we want to find out if the user, liked the post or not
   // this function is for implementing classnames package
-  findUserLike (likes) {
+  findUserLike(likes) {
     const { auth } = this.props;
     if (likes.filter(like => like.user === auth.user.id).length > 0) {
       // if the user was in likes array
@@ -86,10 +90,12 @@ class SharedLinks extends Component {
     }
   }
 
-  render () {
+  render() {
     const { errors } = this.state;
 
-    const sharedLinks = this.props.link.sharedLinks ? this.props.link.sharedLinks : null;
+    const sharedLinks = this.props.link.sharedLinks
+      ? this.props.link.sharedLinks
+      : null;
     const sharedLoop = [];
 
     //   var x = 'some string'
@@ -136,25 +142,41 @@ class SharedLinks extends Component {
         // }
 
         sharedLoop[i] = (
-          <li className='shared-item' key={sharedLinks[i]._id}>
+          <li className="shared-item" key={sharedLinks[i]._id}>
             {/* <Avatar className='shared-avatar' size='70' name='Foo Bar' /> */}
             {/* {picture} */}
-            <div className='shared-name-container'>
-              <span className='shared-name'>{sharedLinks[i].name} :</span>
+            <div className="name-link">
+              <div className="shared-name-container">
+                <span className="shared-name">{sharedLinks[i].name}:</span>
+              </div>
+              <a href={sharedLinks[i].textlink} className="shared-links-text">
+                {sharedLinks[i].textlink}
+              </a>
             </div>
-            <a href={sharedLinks[i].textlink} className='shared-links-text'>
-              {sharedLinks[i].textlink}
-            </a>
-            <button className='shared-likes' onClick={this.onLike.bind(this, sharedLinks[i])}>
-              {this.findUserLike(sharedLinks[i].likes) ? < FaHeart className='shared-like' /> : < FaRegHeart className='shared-dislike' />}
-              <p className='shared-like-number'>
-                {' ' + sharedLinks[i].likes.length}
-              </p>
-            </button>
-            <button className='shared-comments'>
-              <Link to={`/comments/${sharedLinks[i]._id}`} className='shared-comments-text'> Comments
-              </Link>
-            </button>
+            <div className="buttons-for-comment">
+              <button
+                className="shared-likes"
+                onClick={this.onLike.bind(this, sharedLinks[i])}
+              >
+                {this.findUserLike(sharedLinks[i].likes) ? (
+                  <FaHeart className="shared-like" />
+                ) : (
+                  <FaRegHeart className="shared-dislike" />
+                )}
+                <p className="shared-like-number">
+                  {" " + sharedLinks[i].likes.length}
+                </p>
+              </button>
+              <button className="shared-comments">
+                <Link
+                  to={`/comments/${sharedLinks[i]._id}`}
+                  className="shared-comments-text"
+                >
+                  {" "}
+                  Comments
+                </Link>
+              </button>
+            </div>
           </li>
         );
       }
@@ -167,14 +189,12 @@ class SharedLinks extends Component {
 
     return (
       <div>
-        <section className='shared-section'>
-          <div className='shared-section-inner'>
-            <h1 className=''>Shared Links</h1>
-            <div className='shared-container'>
-              <div className='shared-box'>
-                <ul className='shared-list'>
-                  {SharedList}
-                </ul>
+        <section className="shared-section">
+          <div className="shared-section-inner">
+            <h1 className="">Shared Links</h1>
+            <div className="shared-container">
+              <div className="shared-box">
+                <ul className="shared-list">{SharedList}</ul>
               </div>
             </div>
           </div>
@@ -199,4 +219,7 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps, { getSharedLinks, addLikeToLink, deleteLikeFromLink})(withRouter(SharedLinks));
+export default connect(
+  mapStateToProps,
+  { getSharedLinks, addLikeToLink, deleteLikeFromLink }
+)(withRouter(SharedLinks));

@@ -7,8 +7,6 @@
     padding: 0 2%;
   }
 
-  
-  
   /* .button-couple {
         margin-top: 90px;
     } */
@@ -16,18 +14,46 @@
   .btn-ghost {
     width: 45%;
   }
-  #about{
-    height:400px
+  #about {
+    height: 400px;
   }
 }
 
 @media only screen and (max-width: 1023px) {
+  .auth-form {
+    height: auto;
+    width: 50%;
+    margin-left: 25%;
+  }
   .hero-text-box {
     padding: 0 2%;
     font-size: 400%;
   }
   .button-couple {
     margin-top: -65px;
+  }
+  .AD-box {
+    display: none;
+  }
+
+  .link-part {
+    width: 100%;
+  }
+  .shared-name-container {
+    width: 16%;
+    text-align: left;
+  }
+  .shared-comments {
+    width: 17%;
+  }
+  .users-container {
+    width: 100%;
+  }
+  .shared-links-text {
+    width: 40%;
+  }
+  .right-part-comment {
+    width: 20%;
   }
 }
 @media only screen and (max-width: 855px) {
@@ -37,37 +63,36 @@
 
     padding: 0 2%;
   } */
-  header{
+  header {
     height: 50vh;
   }
 
-  .js--wp-1{
+  .js--wp-1 {
     width: 100%;
-    margin-bottom: -10px;    
+    margin-bottom: -10px;
   }
   .hero-text-box {
     padding: 0 2%;
     font-size: 300%;
   }
-  .blue-gradient-topToBottom{
-    padding-top: 10vh; 
+  .blue-gradient-topToBottom {
+    padding-top: 10vh;
   }
   .button-couple {
     margin-top: -40px;
   }
-  #about{
-    height:300px;
+  #about {
+    height: 300px;
   }
 
   .fullscreen-bg__video {
     /* display: none; */
     width: 102%;
     height: 170%;
-
   }
-  .social-icon{
-      float: left;
-      width: 32%;
+  .social-icon {
+    float: left;
+    width: 32%;
   }
 
   .footerIconBar {
@@ -75,19 +100,40 @@
     height: 75px;
     padding-left: 15px;
   }
+  .right-part-comment {
+    width: 23%;
+  }
+  .main-comment-right {
+    width: 15%;
+  }
+  .comment-text {
+    width: 80%;
+  }
+  .comment-send {
+    width: 18%;
+  }
 }
 
 @media only screen and (max-width: 765px) {
+  .goTo-register-or-login {
+    height: 340px;
+  }
+  .get-link-part {
+    height: 430px;
+  }
+  .auth-form {
+    height: auto;
+    width: 60%;
+    margin-left: 20%;
+  }
   body {
-    font-size: 16px;
+    font-size: 18px;
   }
-  section {
-    padding: 30px 0;
-  }
+
   header {
     height: 45vh;
   }
-  .logo{
+  .logo {
     height: 60px;
   }
   .hero-text-box {
@@ -106,22 +152,54 @@
     margin-top: -50px;
   }
   .blue-gradient-topToBottom {
-    padding-top: 15vh; 
+    padding-top: 15vh;
   }
 
   #navScroll {
     position: relative;
     margin-bottom: -13px;
   }
-  .row{
+  .row {
     padding: 0 4%;
   }
   .col {
     width: 100%;
     margin: 0 0 4% 0;
   }
-  .main-nav {
+  .right-links {
     display: none;
+  }
+
+  .navbar-brand {
+    width: 85%;
+    text-align: left;
+    padding-left: 10px;
+  }
+
+  .right-links {
+    width: 190px;
+    float: left;
+    height: auto;
+    color: #dddddd;
+    margin-top: -17px;
+  }
+
+  .nav-item {
+    float: left;
+    width: 100%;
+    margin-left: 10px;
+    padding-top: 17px;
+    text-align: left;
+  }
+  .navbar-link {
+    float: left;
+    color: rgb(197, 197, 197);
+  }
+  .navbar-links {
+    /* display: none; */
+  }
+  .navbar-link {
+    /* display: none; */
   }
   .mobile-nav-icon {
     display: inline-block;
@@ -131,7 +209,6 @@
     width: 45%;
     margin-top: 30px;
     margin-left: -29px;
-
   }
   .main-nav li {
     display: block;
@@ -144,7 +221,7 @@
     padding: 10px 0;
     font-size: 100%;
   }
-  .sticky .main-nav {  
+  .sticky .main-nav {
     margin-top: 6px;
     padding-bottom: 25px;
     width: 45%;
@@ -154,13 +231,20 @@
     padding: 10px 0;
   }
   .sticky .mobile-nav-icon {
-    margin-top: 0px;
+    border: 0;
+    background: inherit;
+    color: #fff;
+    float: right;
+    font-size: 155%;
+    margin-right: 25px;
+    margin-top: 15px;
+    width: 5%;
   }
   .sticky .mobile-nav-icon i {
     color: #fff;
   }
-   #about{
-    height:300px;
+  #about {
+    height: 300px;
   }
 
   .fullscreen-bg__video {
@@ -170,17 +254,75 @@
   .tabSection {
     height: 540px;
   }
-  
+
   .footerIconBar {
     width: 35%;
     height: 75px;
     padding-left: 15px;
   }
+
+  .shared-section-inner {
+    width: 90%;
+    left: 5%;
+  }
+  .shared-links-text {
+    margin-top: 25px;
+    width: 40%;
+  }
+  .shared-comments {
+    width: 22%;
+  }
+  .shared-likes {
+    width: 7%;
+    margin-right: 15px;
+  }
+  .link-description {
+    font-size: 100%;
+    text-align: left;
+  }
+  .convert-button {
+    margin-top: 26px;
+  }
+  .copy-button {
+    margin-top: 26px;
+  }
+  .share-link {
+    width: 18%;
+  }
+  .direct-buttons {
+    width: 60%;
+    margin-left: 20%;
+  }
+  .right-part-comment {
+    width: 25%;
+  }
+  .change-password-button {
+    height: 60px;
+  }
+  .delete-account-button {
+    height: 60px;
+  }
 }
 
 @media only screen and (max-width: 480px) {
-
-  .logo{
+  .main-comment-left {
+    width: 75%;
+  }
+  .comment-section-inner {
+    width: 90%;
+    left: 5%;
+  }
+  .users-section-inner {
+    width: 90%;
+    position: relative;
+    left: 5%;
+  }
+  .auth-form {
+    height: auto;
+    width: 70%;
+    margin-left: 15%;
+  }
+  .logo {
     height: 48px;
   }
   .hero-text-box {
@@ -189,44 +331,147 @@
     letter-spacing: 5px;
     margin-top: -57px;
   }
-   
   h1 {
-    letter-spacing: 10px;
-  }
-  .sidenav {
-    padding-top: 15px;
-  }
-  .sidenav a {
-    font-size: 18px;
-  }
-  .fullscreen-bg__video {
-   /* display: none; */
-    width: 142%;
-    height: 162%;
+    font-size: 400%;
   }
   header {
     height: 29vh;
   }
-   #about{
-    height:300px;
+  #about {
+    height: 300px;
   }
-  
 
+  .share-link {
+    width: 23%;
+  }
   .footerIconBar {
     width: 43%;
     height: 73px;
     padding-left: 15px;
   }
+
+  .input-field {
+    width: 100%;
+    float: left;
+  }
+  .input-group {
+    /* height: 110px; */
+    width: 100%;
+  }
+  input {
+    width: 100%;
+  }
+  .invalid-feedback {
+    float: left;
+    color: #dfdfdf;
+    padding-left: 1%;
+  }
+  .copy-button {
+    width: 99%;
+    float: left;
+    margin-top: 10px;
+  }
+  .convert-button {
+    width: 99%;
+    float: left;
+    margin-top: 5px;
+  }
+  .get-link-part {
+    height: 470px;
+  }
+  .link-description {
+    font-size: 100%;
+  }
+  .link-section-inner {
+    width: 90%;
+    margin-left: 5%;
+  }
+  .link-text {
+    width: 60%;
+  }
+  .delete-link {
+    width: 10%;
+  }
+  .shared-links-text {
+    float: left;
+    margin-right: 10px;
+    margin-top: 7px;
+    margin-left: 18px;
+    color: #fff;
+    overflow-x: overlay;
+    text-align: left;
+    width: 90%;
+  }
+  .name-link {
+    width: 79%;
+    height: auto;
+    float: left;
+  }
+  .buttons-for-comment {
+    width: 20%;
+    float: right;
+  }
+  .shared-likes {
+    float: right;
+    width: 99%;
+    height: 30px;
+    padding-top: 0px;
+    margin-top: 8px;
+    margin-right: 5px;
+  }
+  .shared-name-container {
+    width: 80%;
+    text-align: left;
+    margin-top: 12px;
+  }
+  .shared-comments {
+    font-size: 80%;
+    float: right;
+    width: 100%;
+    height: 30px;
+    padding-top: 0px;
+    margin-top: 4px;
+    margin-right: 5px;
+  }
+  .input-field-dash {
+    width: 100%;
+  }
+  .form-left-field {
+    width: 100%;
+  }
+  .direct-buttons {
+    width: 70%;
+    margin-left: 15%;
+  }
+  .right-part-comment {
+    width: 30%;
+  }
 }
 
 @media only screen and (max-width: 400px) {
+  .users-links-number {
+    margin-right: 20px;
+  }
+  .links-form {
+    height: auto;
+    width: 80%;
+    margin-left: 10%;
+  }
+  .auth-form {
+    height: auto;
+    width: 84%;
+    margin-left: 8%;
+  }
+  h1 {
+    font-size: 300%;
+  }
   .hero-text-box {
     padding: 0;
     font-size: 275%;
     margin-top: -55px;
   }
-  #about{
-    height:325px;
+  #about {
+    height: 325px;
   }
   .sidenav {
     padding-top: 15px;
@@ -235,17 +480,39 @@
     font-size: 18px;
   }
   .fullscreen-bg__video {
-   /* display: none; */
+    /* display: none; */
     width: 217%;
     height: 162%;
-
   }
   .footerIconBar {
     width: 55%;
   }
+  .buttons-for-comment {
+    width: 31%;
+    float: right;
+  }
+  .name-link {
+    width: 65%;
+    height: auto;
+    float: left;
+  }
+  .direct-buttons {
+    width: 80%;
+    margin-left: 10%;
+  }
 }
 
 @media only screen and (max-width: 330px) {
+  .users-avatar {
+    width: 55px;
+    height: 55px;
+    margin-left: 7px;
+    margin-top: 12px;
+    padding-top: 17px;
+  }
+  .users-name {
+    margin-left: 6px;
+  }
   .hero-text-box {
     font-size: 240%;
     letter-spacing: 0px;

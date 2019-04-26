@@ -143,6 +143,7 @@ class Dashboard extends Component {
       linksLoop[i] = (
         <li className="link-item" key={links[i]._id}>
           <p className="link-text">{links[i].textlink}</p>
+
           <button
             className={classnames("share-link", {
               "shared vis": links[i].shared === true
@@ -170,34 +171,40 @@ class Dashboard extends Component {
         <section className="get-link-part">
           <h1>Dashboard</h1>
           <form className="links-form" noValidate onSubmit={this.onSubmit}>
-            <p className="link-description">paste a link here.</p>
-            <InputGroup
-              type="text"
-              className="link-input"
-              placeholder="like: https://www.google.com/"
-              name="pastelink"
-              value={this.state.pastelink}
-              onChange={this.onChange}
-              error={errors.linkImported}
-            />
-            <button onSubmit={this.onSubmit} className="copy-button">
+            <div className="input-field-dash">
+              <p className="link-description">paste a link here.</p>
+              <InputGroup
+                type="text"
+                className="link-input"
+                placeholder="like: https://www.google.com/"
+                name="pastelink"
+                value={this.state.pastelink}
+                onChange={this.onChange}
+                error={errors.linkImported}
+              />
+            </div>
+            <button onSubmit={this.onSubmit} className="convert-button">
               <FaExchangeAlt />
             </button>
-            <p className="link-description link-space">
-              get the short link here.
-            </p>
-            <InputGroup
-              type="text"
-              className="myInput link-input"
-              ref={this.myRef}
-              placeholder="like: https://www.google.com/"
-              name="linkComming"
-              value={this.props.mainLink.linkConvertedObject.convertedUrl || ""}
-              onChange={this.onChange}
-              disabled={true}
-              errors={errors}
-              id="Progress1"
-            />
+            <div className="input-field-dash">
+              <p className="link-description link-space">
+                get the short link here.
+              </p>
+              <InputGroup
+                type="text"
+                className="myInput link-input"
+                ref={this.myRef}
+                placeholder="like: https://www.google.com/"
+                name="linkComming"
+                value={
+                  this.props.mainLink.linkConvertedObject.convertedUrl || ""
+                }
+                onChange={this.onChange}
+                disabled={true}
+                errors={errors}
+                id="Progress1"
+              />
+            </div>
             {/* {console.log(errors.pastelink)} */}
 
             <CopyToClipboard
