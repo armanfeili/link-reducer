@@ -75,10 +75,12 @@ router.post("/converter", (req, res) => {
       //
       let newUrl;
       if (process.env.NODE_ENV === "production") {
-        newUrl = `http://localhost:5000/api/links/redirect/${newString}`;
+        // newUrl = `http://localhost:5000/api/links/redirect/${newString}`;
+        newUrl = `https://link-reducer.herokuapp.com/api/links/redirect/${newString}`;
       } else {
         // newUrl = `https://linkreducer.herokuapp.com/${newString}`
-        newUrl = `http://localhost:5000/api/links/redirect/${newString}`;
+        // newUrl = `http://localhost:5000/api/links/redirect/${newString}`;
+        newUrl = `https://link-reducer.herokuapp.com/api/links/redirect/${newString}`;
       }
       const newLink = new MainLink({
         realUrl: linkImported,
